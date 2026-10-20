@@ -1,0 +1,2 @@
+import { Link, NavLink } from 'react-router-dom';
+export default function Navbar(){return <header className="site-header"><div className="container nav-inner"><Link className="brand" to="/">✦ VN<span>Hotel</span></Link><nav className="main-nav" aria-label="Điều hướng chính"><NavLink end to="/">Trang chủ</NavLink><NavLink to="/rooms">Khách sạn & Phòng</NavLink><NavLink to="/about-us">Giới thiệu</NavLink><NavLink to="/booking">Đặt phòng</NavLink></nav><Link to="/login" className="btn btn-outline nav-login">Đăng nhập</Link></div></header>}
