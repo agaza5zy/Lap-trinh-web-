@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -68,8 +69,24 @@ app.use('/api/admin', adminRoutes);
 
 // On Vercel, Vite builds the SPA into the root /public directory. Static assets
 // are served here and React Router deep links fall back to index.html.
-if (process.env.SERVE_FRONTEND === 'true' || process.env.VERCEL === '1') {
-  const frontendDirectory = path.resolve(process.cwd(), 'public');
+// Resolve the project root from this module so the path remains correct
+// whether the local backend is started from /backend or Vercel runs the
+// root index.js function.
+const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+const frontendDirectory = path.join(projectRoot, 'public');
+
+if (process.env.VERCEL === '1') {
+  // Vercel packages this file into the Express function via includeFiles.
+  // Public assets are also exposed by Vercel's CDN; Express only provides
+  // the HTML fallback for client-side routes.
+  app.get('*', (req, res, next) => {
+    if (req.path === '/api' || req.path.startsWith('/api/')) return next();
+    res.sendFile(path.join(frontendDirectory, 'index.html'), (error) => {
+      if (error) next(error);
+    });
+  });
+} else if (process.env.SERVE_FRONTEND === 'true') {
+  // Local preview: serve the Vite build from the project-root /public folder.
   app.use(express.static(frontendDirectory, { index: false, fallthrough: true }));
   app.get('*', (req, res, next) => {
     if (req.path === '/api' || req.path.startsWith('/api/')) return next();
