@@ -1,0 +1,22 @@
+{
+  "name": "vnhotel-vercel",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace frontend",
+    "dev:frontend": "npm run dev --workspace frontend",
+    "dev:backend": "npm run dev --workspace backend",
+    "seed:admin": "npm run seed:admin --workspace backend"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
