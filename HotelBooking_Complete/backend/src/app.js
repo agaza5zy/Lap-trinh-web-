@@ -76,11 +76,23 @@ const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '
 const frontendDirectory = path.join(projectRoot, 'public');
 
 if (process.env.VERCEL === '1') {
-  // Vercel packages this file into the Express function via includeFiles.
-  // Public assets are also exposed by Vercel's CDN; Express only provides
-  // the HTML fallback for client-side routes.
+  // The Vercel Express function receives the built /public directory through
+  // functions.includeFiles. Serve JS, CSS, images and other generated files
+  // from Express BEFORE the SPA fallback; otherwise /assets/*.js and
+  // /assets/*.css are incorrectly answered with index.html (text/html).
+  app.use(express.static(frontendDirectory, {
+    index: false,
+    fallthrough: true,
+    maxAge: '1y',
+    immutable: true,
+  }));
+
   app.get('*', (req, res, next) => {
     if (req.path === '/api' || req.path.startsWith('/api/')) return next();
+    // A missing built asset should be a real 404, not the SPA HTML document.
+    if (/\.(?:js|mjs|css|map|png|jpe?g|gif|svg|webp|ico|woff2?)$/i.test(req.path)) {
+      return res.status(404).type('text/plain').send('Static asset not found. Check the Vite build output.');
+    }
     res.sendFile(path.join(frontendDirectory, 'index.html'), (error) => {
       if (error) next(error);
     });
