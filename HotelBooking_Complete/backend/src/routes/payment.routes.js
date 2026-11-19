@@ -1,0 +1,14 @@
+import { asyncHandler } from '../middleware/asyncHandler.js';
+import { Router } from 'express';
+import * as controller from '../controllers/payment.controller.js';
+import { authenticate } from '../middleware/auth.js';
+import { requireRole } from '../middleware/role.js';
+const router = Router();
+router.get('/config', asyncHandler(controller.paymentConfig));
+router.post('/', authenticate, asyncHandler(controller.createPayment));
+router.post('/paypal/capture', authenticate, asyncHandler(controller.capturePayPal));
+router.post('/momo/ipn', asyncHandler(controller.momoIpn));
+router.post('/zalopay/callback', asyncHandler(controller.zaloCallback));
+router.get('/booking/:bookingCode', authenticate, asyncHandler(controller.paymentStatus));
+router.patch('/:id/confirm-bank', authenticate, requireRole('admin', 'staff'), asyncHandler(controller.confirmBankTransfer));
+export default router;
