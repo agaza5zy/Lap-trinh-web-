@@ -69,7 +69,12 @@ export async function listBookings(_req, res) {
       p.status AS paymentStatus, p.provider AS paymentProvider, p.payment_id AS paymentId
      FROM bookings b JOIN booking_details d ON d.booking_id=b.booking_id JOIN rooms r ON r.room_id=d.room_id
      JOIN room_types rt ON rt.room_type_id=r.room_type_id JOIN hotels h ON h.hotel_id=b.hotel_id
-     LEFT JOIN payments p ON p.payment_id=(SELECT MAX(p2.payment_id) FROM payments p2 WHERE p2.booking_id=b.booking_id)
+     LEFT JOIN (
+       SELECT booking_id, MAX(payment_id) AS payment_id
+       FROM payments
+       GROUP BY booking_id
+     ) latest_payment ON latest_payment.booking_id=b.booking_id
+     LEFT JOIN payments p ON p.payment_id=latest_payment.payment_id
      ORDER BY b.created_at DESC LIMIT 300`
   );
   res.json({ bookings: rows });
