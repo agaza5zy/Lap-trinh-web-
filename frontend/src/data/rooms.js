@@ -1,0 +1,7 @@
+export const fallbackRooms = [
+  { id: 1, name: 'Phòng Superior', hotelName: 'VNHotel Đà Lạt', location: 'Đà Lạt', price: 750000, capacity: 2, area: 25, stars: 4, availableRooms: 2, image: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=1200&q=85', description: 'Không gian nghỉ ngơi ấm cúng, phù hợp cho chuyến đi đôi.', amenities: ['Wi-Fi miễn phí', 'Điều hòa', 'TV màn hình phẳng'] },
+  { id: 2, name: 'Phòng Deluxe', hotelName: 'VNHotel Đà Lạt', location: 'Đà Lạt', price: 1050000, capacity: 2, area: 32, stars: 4, availableRooms: 2, image: 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1200&q=85', description: 'Phòng rộng rãi với nội thất hiện đại và cửa sổ thoáng.', amenities: ['Wi-Fi miễn phí', 'Điều hòa', 'Bữa sáng'] },
+  { id: 3, name: 'Phòng Family', hotelName: 'VNHotel Đà Lạt', location: 'Đà Lạt', price: 1450000, capacity: 4, area: 42, stars: 4, availableRooms: 2, image: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1200&q=85', description: 'Không gian dành cho gia đình hoặc nhóm bạn nhỏ.', amenities: ['Wi-Fi miễn phí', 'Hai giường lớn', 'Minibar'] },
+];
+export const money = (value) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 }).format(Number(value || 0));
+export const dateLabel = (value) => value ? new Intl.DateTimeFormat('vi-VN').format(new Date(`${String(value).slice(0, 10)}T00:00:00`)) : '—';
