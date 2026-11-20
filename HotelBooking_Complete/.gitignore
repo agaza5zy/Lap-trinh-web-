@@ -1,0 +1,13 @@
+**/node_modules/
+**/.env
+**/.env.*
+!**/.env.example
+**/dist/
+**/coverage/
+*.log
+.DS_Store
+.vscode/
+.idea/
+
+# Keep the Vite build output: Vercel publishes root public/ as static assets.
+.vercel
