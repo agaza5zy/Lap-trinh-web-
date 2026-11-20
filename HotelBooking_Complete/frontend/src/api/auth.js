@@ -1,0 +1,10 @@
+import apiClient from './client';
+export const registerApi = (data) => apiClient.post('/auth/register', data).then((r) => r.data);
+export const verifyEmailApi = (token) => apiClient.post('/auth/verify-email', { token }).then((r) => r.data);
+export const resendVerificationApi = (email) => apiClient.post('/auth/resend-verification', { email }).then((r) => r.data);
+export const loginApi = (data) => apiClient.post('/auth/login', data).then((r) => r.data);
+export const getGoogleNonceApi = () => apiClient.get('/auth/google/nonce').then((r) => r.data);
+export const googleLoginApi = (credential, nonce, csrfToken) => apiClient.post('/auth/google', { credential, nonce, g_csrf_token: csrfToken }).then((r) => r.data);
+export const getAppleNonceApi = () => apiClient.get('/auth/apple/nonce').then((r) => r.data);
+export const appleLoginApi = (data) => apiClient.post('/auth/apple', data).then((r) => r.data);
+export const getMeApi = () => apiClient.get('/auth/me').then((r) => r.data);
