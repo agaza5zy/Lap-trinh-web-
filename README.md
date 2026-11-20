@@ -143,10 +143,13 @@ Mở `http://localhost:5173`.
 ## 7. Google / Apple / Email
 
 ### Google
-- Tạo OAuth Client ID loại Web application.
-- Thêm Authorized JavaScript origins gồm local origin và domain production.
-- Cùng Client ID được đặt vào `GOOGLE_CLIENT_ID` phía backend và `VITE_GOOGLE_CLIENT_ID` phía frontend.
-- Trên Vercel, `VITE_GOOGLE_CLIENT_ID` phải được áp dụng cho đúng môi trường deployment (Production/Preview) và cần deploy lại sau khi thay đổi.
+- Tạo OAuth Client ID loại **Web application** trong Google Cloud Console.
+- Trong **Authorized JavaScript origins**, thêm chính xác origin của website, ví dụ `https://ten-mien-production.vercel.app` (không thêm đường dẫn `/login` hoặc `/register`). Nếu dùng domain riêng, thêm cả domain riêng. Khi chạy local, thêm `http://localhost:5173`.
+- Dùng **cùng một Web Client ID** cho hai biến: `GOOGLE_CLIENT_ID` (backend) và `VITE_GOOGLE_CLIENT_ID` (frontend).
+- Trên Vercel, đặt cả hai biến cho môi trường **Production**. Với `VITE_GOOGLE_CLIENT_ID`, chọn kiểu hiển thị **Config** (không chọn Secret vì Vite cần đọc biến này lúc build). Không đưa Google Client Secret vào biến `VITE_`.
+- Sau khi thêm hoặc sửa biến môi trường, redeploy Production để Vite build lại giao diện.
+- Nếu trang chỉ hiện khoảng trống thay cho nút Google, hãy tải lại trang và kiểm tra thông báo dưới vùng đăng nhập mạng xã hội. Mã nguồn hiện sẽ báo rõ nếu thiếu Client ID, không tải được Google Identity Services hoặc API tạo nonce bị lỗi.
+- Nếu nút Google xuất hiện nhưng đăng nhập thất bại, kiểm tra Vercel Runtime Logs: `GET /api/auth/google/nonce` cần trả về `200`; sau đó kiểm tra `POST /api/auth/google`. Đảm bảo migration tạo bảng `oauth_login_challenges` đã được chạy trên TiDB.
 
 ### Apple
 - Cần Apple Developer Program, Services ID, Team ID, Key ID và private key `.p8`.
